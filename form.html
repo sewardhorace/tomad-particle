@@ -1,20 +1,54 @@
 <!DOCTYPE>
 <html>
+  <style>
+    body{
+      background-color: rgb(106, 106, 106);
+    }
+    .btn-box{
+      border-radius: 3px;
+      background-color: rgb(187, 187, 187);
+    }
+    button{
+      font-size: 16px;
+      height: 30px;
+      width: 100px;
+      margin: 10px;
+      border-radius: 4px;
+      color:white;
+      border:0px;
+      background-color: rgb(79, 79, 79)
+    }
+  </style>
+
   <body>
   <center>
   <br>
   <br>
   <br>
-  <form action="https://api.particle.io/v1/devices/1b0035001447343433313338/activate?access_token=8b2439c0e2c61259753e35803af98fe2953ac2ca" method="POST">
-    Tell your device what to do!<br>
-    <br>
-    <input type="radio" name="args" value="first">first.
-    <br>
-    <input type="radio" name="args" value="second">second.
-    <br>
-    <br>
-    <input type="submit" value="Do it!">
-  </form>
+  <div class="btn-box">
+    <button>Section 1</button>
+    <button>Section 2</button>
+    <button>Section 3</button>
+  </div>
   </center>
   </body>
+
+  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script>
+  var messages = ["first", "second", "third"];
+
+  $("button").each(function (idx){
+    var data = {args : messages[idx]};
+    $(this).click(function (e){
+      $.ajax({
+          type: "POST",
+          url: "https://api.particle.io/v1/devices/1b0035001447343433313338/activate?access_token=8b2439c0e2c61259753e35803af98fe2953ac2ca",
+          data: data,
+          success: function (data) {
+            console.log("lit up section "+data.return_value);
+          }
+      });
+    });
+  });
+  </script>
 </html>

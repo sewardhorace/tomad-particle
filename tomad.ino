@@ -1,5 +1,5 @@
-#define DELAY 5000
-#define GLOWTIME 500
+
+#define GLOWTIME 5000
 
 int blue1 = D0;
 int green1 = D1;
@@ -13,70 +13,57 @@ int blue3 = A0;
 int green3 = A1;
 int red3 = A2;
 
-int *pins[] = {
-  &red1, &green1, &blue1,
-  &red2, &green2, &blue2,
-  &red3, &green3, &blue2
+int pins[] = {
+  red1, green1, blue1,
+  red2, green2, blue2,
+  red3, green3, blue3
 };
 
-struct Section{
-  int isActivated;
-  int *pins[3];
+/*struct Section{
+  int *pins[];
 };
-Section first = {0, {&red1, &green1, &blue1}};
-Section second = {0, {&red2, &green2, &blue2}};
-Section third = {0, {&red3, &green3, &blue3}};
+Section first = {{red1}};
+Section second = {{green2, blue2}};
+Section third = {{red3, blue3}};*/
+
+int first[] = {red1, green1};
+int second[] = {green2, blue2};
+int third[] = {red3, blue3};
 
 void setup()
 {
   for (int i = 0; i < sizeof(pins) / sizeof(int); i++) {
-    pinMode(*pins[i], OUTPUT);
-    digitalWrite(*pins[i],HIGH);
+    pinMode(pins[i], OUTPUT);
+    digitalWrite(pins[i],HIGH);
   }
-
   Spark.function("activate", activate);
 }
 
-void turnOn(struct Section& section){
-  digitalWrite(*section.pins[0],LOW);
-}
-void turnOff(struct Section& section){
-  digitalWrite(*section.pins[0],HIGH);
+void loop(){
 }
 
-void loop()
-{
-    if (first.isActivated || second.isActivated || third.isActivated){
-      delay(DELAY);
-      if (first.isActivated){
-        turnOn(first);
-      }
-      if (second.isActivated){
-        turnOn(second);
-      }
-      delay(GLOWTIME);
-      turnOff(first);
-      turnOff(second);
-      first.isActivated = 0;
-      second.isActivated = 0;
-      third.isActivated = 0;
-    }
+void turnOn(int section[], int size){
+  for (int i = 0; i < size; i++) {
+    digitalWrite(section[i],LOW);
+  }
+  delay(GLOWTIME);
+  for (int i = 0; i < size; i++) {
+    digitalWrite(section[i],HIGH);
+  }
 }
 
 int activate(String command) {
     if (command=="first") {
-      first.isActivated = 1;
-      turnOn(first);
+      turnOn(first, 2);
       return 1;
     }
     else if (command=="second") {
-      turnOn(second);
-      second.isActivated = 1;
-      return 1;
+      turnOn(second, 2);
+      return 2;
     }
     else if (command=="third") {
-      third.isActivated = 1;
-      return 1;
+      turnOn(third, 2);
+      return 3;
     }
     else {
       return -1;
