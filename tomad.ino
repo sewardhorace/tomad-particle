@@ -66,9 +66,11 @@ void loop()
 int activate(String command) {
     if (command=="first") {
       first.isActivated = 1;
+      turnOn(first);
       return 1;
     }
     else if (command=="second") {
+      turnOn(second);
       second.isActivated = 1;
       return 1;
     }
